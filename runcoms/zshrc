@@ -5,9 +5,41 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+load_pyenv() {
+  export PYENV_ROOT="${XDG_CONFIG_HOME:-$HOME}/pyenv"
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+  echo "pyenv loaded (unload_pyenv to unload)"
+}
+
+unload_pyenv() {
+  echo "BEFORE PATH: $PATH" | grep --color -E "${XDG_CONFIG_HOME:-$HOME}/pyenv/shims|${XDG_CONFIG_HOME:-$HOME}/pyenv/bin|${XDG_CONFIG_HOME:-$HOME}/pyenv/plugins/pyenv-virtualenv/shims" || echo "BEFORE PATH: $PATH"
+  PATH=$(echo "$PATH" | sed "s#${XDG_CONFIG_HOME:-$HOME}/pyenv/shims:##")
+  PATH=$(echo "$PATH" | sed "s#${XDG_CONFIG_HOME:-$HOME}/pyenv/bin:##")
+  PATH=$(echo "$PATH" | sed "s#${XDG_CONFIG_HOME:-$HOME}/pyenv/plugins/pyenv-virtualenv/shims:##")
+  echo "AFTER PATH: $PATH" | grep --color -E "${XDG_CONFIG_HOME:-$HOME}/pyenv/shims|${XDG_CONFIG_HOME:-$HOME}/pyenv/bin|${XDG_CONFIG_HOME:-$HOME}/pyenv/plugins/pyenv-virtualenv/shims" || echo "AFTER PATH: $PATH"
+  export PATH
+  unset PYENV_SHELL
+  unset PYENV_VIRTUALENV_INIT
+  unset -f _pyenv pyenv _pyenv_virtualenv_hook
+  if command -v compctl &> /dev/null; then
+    compctl -U -K _pyenv pyenv
+  fi
+  if [[ -n "$precmd_functions" ]]; then
+    precmd_functions=(${precmd_functions:#_pyenv_virtualenv_hook})
+  fi
+  unset PYENV_ROOT
+  echo "pyenv unloaded (load_pyenv to reload)"
+}
+
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
 # Customize to your needs...
+load_pyenv
+
+eval "$(direnv hook zsh)"
