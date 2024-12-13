@@ -40,12 +40,16 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 # Customize to your needs...
+
+# setup pyenv for ourp project
 load_pyenv
 
+# direnv /.envrc hooking
 eval "$(direnv hook zsh)"
 
 # Customize to your needs...
 autoload -Uz promptinit
 promptinit
+
 # prompt -l
-prompt agnoster
+prompt walters
