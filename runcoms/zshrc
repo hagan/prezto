@@ -43,3 +43,9 @@ fi
 load_pyenv
 
 eval "$(direnv hook zsh)"
+
+# Customize to your needs...
+autoload -Uz promptinit
+promptinit
+# prompt -l
+prompt agnoster
