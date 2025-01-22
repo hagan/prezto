@@ -44,8 +44,18 @@ load_pyenv
 
 eval "$(direnv hook zsh)"
 
+# setup nvm
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 # Customize to your needs...
 autoload -Uz promptinit
 promptinit
 # prompt -l
 prompt agnoster
+
+## Aliases
+alias backend="cd /opt/src/wilma-backend"
+alias frontend="cd /opt/src/wilma-ui"
+
